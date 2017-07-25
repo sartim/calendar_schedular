@@ -3,4 +3,9 @@ from __future__ import unicode_literals
 
 from django.db import models
 
-# Create your models here.
+
+class Event(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()

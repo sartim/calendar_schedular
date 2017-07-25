@@ -2,8 +2,11 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-
+from app.models import Event
 
 def calendar_schedule(request):
-    context = {}
+    query_list = Event.objects.all();
+    context = {
+        'events': query_list
+    }
     return render(request, 'app/calendar.html', context)

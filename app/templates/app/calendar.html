@@ -6,4 +6,82 @@ asfasf
         <div id='calendar'></div>
     </div>
 </div>
+<!-- Modal Add -->
+<div class="modal fade" id="ModalAdd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header panel-danger">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="OccModalLabel">Set Occurrence</h4>
+            </div>
+            <form id="form-data" method="POST">
+            <div class="modal-body">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-lg-12">
+                        <span class="hidden" id="selected-start1"></span>
+                        <label for="hood">Title</label><br>
+                        <input id="hood" class="form-control" type="text" value="">
+                    </div>
+                    <p></p>
+                    <div class="col-lg-12">
+                        <label for="restaurant">Description</label><br>
+                        <input id="restaurant" class="form-control" type="text" value="">
+                    </div>
+                    <p>&nbsp;</p>
+                    <input type="radio" name="set" id="single-day" value="single-day"> Single Day |
+                    <input type="radio" name="set" id="repeat" value="repeat"> Repeat
+                    <p>&nbsp;</p>
+                    <div id="occurrence">
+                        <h5>Every</h5>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                            <input id="num" type="text" value="1" class="form-control" disabled>
+                        </div>
+                        <div class="col-lg-10 col-md-10col-sm-10 col-xs-10">
+                            <select class="form-control" id="every">
+                                <option value="days">days</option>
+                                <option value="weeks">weeks</option>
+                                <option value="months">months</option>
+                                <option value="years" disabled>years</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" id="dayofweek">
+                        <h5>Repeats on</h5>
+                        <label for="0">Mon <input type="checkbox" id="0" data-value="0" name="chkbox" value="Monday"></label> |
+                        <label for="1">Tue <input type="checkbox" id="1" data-value="1" name="chkbox" value="Tuesday"></label> |
+                        <label for="2">Wed <input type="checkbox" id="2" data-value="2" name="chkbox" value="Wednesday"></label> |
+                        <label for="3">Thu <input type="checkbox" id="3" data-value="3" name="chkbox" value="Thursday"></label> |
+                        <label for="4">Fri <input type="checkbox" id="4" data-value="4" name="chkbox" value="Friday"></label> |
+                        <label for="5">Sat <input type="checkbox" id="5" data-value="5" name="chkbox" value="Saturday"></label> |
+                        <label for="6">Sun <input type="checkbox" id="6" data-value="6" name="chkbox" value="Sunday"></label>
+                    </div>
+                    <p>&nbsp;</p>
+                    <div class="col-sm-12">
+                        <label for="id-never-ends">
+                            Never Ends
+                            <input id='id-never-ends' type="checkbox" value="TRUE" disabled>
+                        </label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <h5>Starts</h5>
+                        <input name="datetime" type="text" class="form-control datetimepicker" id="id_start_date_start" value=""><br>
+                        <input name="datetime" type="text" class="form-control datetimepicker" id="id_start_date_end" value="" disabled>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <h5>Ends</h5>
+                        <input name="datetime" type="text" class="form-control datetimepicker" id="id_end_date_start" value="" disabled=""><br>
+                        <input name="datetime" type="text" class="form-control datetimepicker" id="id_end_date_end" value="">
+                    </div>
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" id="sbt">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
