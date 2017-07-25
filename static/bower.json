@@ -17,6 +17,8 @@
   "dependencies": {
     "fullcalendar": "^3.4.0",
     "bootstrap": "^3.3.7",
-    "bootstrap-daterangepicker": "^2.1.25"
+    "bootstrap-daterangepicker": "^2.1.25",
+    "jquery": "^2.2.4",
+    "moment": "^2.15.1"
   }
 }
