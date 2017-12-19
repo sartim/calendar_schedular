@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+from datetime import timezone
 from django.shortcuts import render
 from app.models import Event
 
