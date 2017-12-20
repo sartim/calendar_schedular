@@ -2,6 +2,7 @@
 <html lang="en">
 {% load static %}
 <link rel="stylesheet" href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}">
+<link href="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
 <link rel="stylesheet" href="{% static 'bower_components/fullcalendar/dist/fullcalendar.min.css' %}">
 <head>
     <meta charset="UTF-8">
@@ -23,7 +24,7 @@
 <script src="{% static 'bower_components/jquery/dist/jquery.min.js' %}"></script>
 <script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bower_components/moment/min/moment.min.js' %}"></script>
-<script src="{% static 'bower_components/bootstrap-daterangepicker/daterangepicker.js' %}"></script>
+<script src="{% static 'bower_components/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js' %}"></script>
 <script src="{% static 'bower_components/fullcalendar/dist/fullcalendar.min.js' %}"></script>
 <script>
 $(document).ready(function(){
@@ -144,8 +145,9 @@ $(document).ready(function(){
         eventMouseout: function() {
             $(this).css('z-index', 8);
             $('.tooltipevent').remove();
-        },
+        }
     });
+
     // To edit
     var edit = function(){
         start = event.start.format('YYYY-MM-DD HH:mm:ss');
@@ -177,7 +179,7 @@ $(document).ready(function(){
         .always(function() {
           console.log( "finished" );
         });
-    }
+    };
     // To delete
     var delete_event = function(event){
         start = event.start.format('YYYY-MM-DD HH:mm:ss');
@@ -236,4 +238,5 @@ $('#id_end_date_end').outside('click', function(e) {
     $('#id_end_date_start').val(edt + ' ' + stm);
 });
 </script>
+{% block js %}{% endblock %}
 </html>

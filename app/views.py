@@ -20,6 +20,27 @@ def calendar_schedule(request):
     return render(request, 'app/calendar.html', context)
 
 
+def calendar_edit(request):
+    id = request.POST.get("id")
+    events = Event.objects.get(pk=id)
+
+    context = {
+        'events': events,
+    }
+    tr = TemplateResponse(request, 'app/calendar_event_resp.html', context)
+    tr.render()
+    data = tr.content
+    return HttpResponse(data)
+
+
+def calendar_data(request):
+    context = {}
+    tr = TemplateResponse(request, 'app/calendar_event_resp.html', context)
+    tr.render()
+    data = tr.content
+    return HttpResponse(data)
+
+
 def calculate_date_time(request):
     never_ends = ''
     daily = request.POST.get("daily")
@@ -119,15 +140,3 @@ def calculate_date_time(request):
 
     return HttpResponse("")
 
-
-def calendar_edit(request):
-    id = request.POST.get("id")
-    events = Event.objects.get(pk=id)
-
-    context = {
-        'events': events,
-    }
-    tr = TemplateResponse(request, 'app/calendar_event_resp.html', context)
-    tr.render()
-    data = tr.content
-    return HttpResponse(data)
