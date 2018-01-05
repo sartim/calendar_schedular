@@ -202,3 +202,232 @@ $("input#repeat").unbind("click").click(function(){
     //$('#id_end_date_start').fadeIn('slow');
     //$('#id_start_date_end').fadeIn('slow');
 });
+
+// jQuery Prototype function for clicking outside
+(function($){
+  $.fn.outside = function(ename, cb){
+      return this.each(function(){
+          var $this = $(this),
+              self = this;
+          $(document).bind(ename, function temp(e){
+              if(e.target !== self && !$.contains(self, e.target)){
+                  cb.apply(self, [e]);
+                  if(!self.parentNode) $(document.body).unbind(ename, temp);
+              }
+          });
+      });
+  };
+}(jQuery));
+// Running click on prototype plugin
+$('#id_end_date_end').outside('click', function(e) {
+    var start_date_start = $('#id_start_date_start').val();
+    var sdt = start_date_start.split(' ')[0];
+    var stm = start_date_start.split(' ')[1];
+
+    var end_date_end = $('#id_end_date_end').val();
+    var edt = end_date_end.split(' ')[0];
+    var etm = end_date_end.split(' ')[1];
+
+    $('#id_start_date_end').val(sdt + ' ' + etm);
+    $('#id_end_date_start').val(edt + ' ' + stm);
+});
+
+/**
+ * Initialize Calendar
+ */
+$('#calendar').fullCalendar({
+    header: {
+        left: 'prev, next, today',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay',
+    },
+    // First day in calendar week view
+    firstDay: 1,
+    weekNumbers: true,
+    scrollTime: '07:00:00',
+    allDay: true,
+    defaultView: 'month',
+    timezone: 'local',
+    editable: true,
+    allDaySlot: true,
+    timeFormat: 'HH:mm',
+    eventOverlap: false,
+    droppable: true, // this allows things to be dropped onto the calendar
+    eventLimit: true, // allow "more" link when too many events
+    events: function(start, end, timezone, callback) {
+        $('.loader').show();
+        $.ajax({
+            url: '{% url "api:internet-billing-list" %}',
+            dataType: 'json',
+            data: {
+                start: start.format(),
+                end: end.format()
+            },
+            success: function(doc) {
+
+                var events = [];
+                var today = new Date();
+                if(!!doc){
+                    $.map( doc, function( r ) {
+                        events.push({
+                            id: r.id,
+                            title: r.name,
+                            start: r.start_date,
+                            end: r.end_date,
+                            color: (moment(r.end_date).format('YYYY-MM-DD HH:mm:ss') < moment(today).format('YYYY-MM-DD HH:mm:ss')) ? '#E6E6E6': (moment(r.end_date).format('YYYY-MM-DD HH:mm:ss') > moment(today).format('YYYY-MM-DD HH:mm:ss')) ? 'green' : '#E6E6E6'
+                        });
+                    });
+                }
+                callback(events);
+                $('.loader').hide();
+            }
+        });
+    },
+    //axisFormat: 'HH:mm',
+    selectable: true,
+    selectHelper: true,
+    select: function(start, end, date) {
+        var check = moment(start).format('YYYY-MM-DD');
+        var today = moment(today).format('YYYY-MM-DD');
+
+        // var today = new Date(); // Getting today's date
+        var selected = moment(start).format('YYYY-MM-DD HH:mm:ss'); // Format start date selected
+        //var today = moment(today).format('YYYY-MM-DD HH:mm:ss'); // Format today's date
+        var allDay = !start.hasTime() && !end.hasTime();
+        var startdate = moment(start).format('YYYY-MM-DD HH:mm:ss');
+        var enddate = moment(end).format('YYYY-MM-D HH:mm:ss');
+        var enddt = enddate.split(' ')[0];
+        var endtime = enddate.split(' ')[1];
+
+        if(check < today){
+            // Show modal if the date selected is less than current date
+            $('#ModalError').modal('show');
+        }
+        else if(check == today || check > today ){
+            // To render modal for creating a task with start and end datetime field filled
+            $('#ModalAdd #id_start_date_start').val(moment(start).format('YYYY-MM-DD HH:mm:ss'));
+            //$('#ModalAdd #id_start_date_end').val(enddt+' '+endtime);
+            $('#ModalAdd #id_end_date_start').val(moment(end).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalAdd #id_end_date_end').val(moment(end).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalAdd').modal('show');
+            $('#selected-start1').html(selected);
+        }
+    },
+    eventRender: function(event, element) {
+        element.append("<span class='closeon' style='border:1px solid #ffa900;border-radius:3px; background-color:#ffa900; margin-left:auto'><span class='fa fa-trash-o'></span></span>");
+        element.find(".closeon").click(function() {
+            // Confirm delete
+            if (confirm("Are you sure you want to delete?") == true) {
+                // call delete function
+                delete_event(event);
+                // Clear event from calendar
+                $('#calendar').fullCalendar('removeEvents', event.id);
+            } else {
+                return false;
+            }
+        });
+
+        element.bind('dblclick', function() {
+            console.log(event);
+            $('#ModalEdit #id-edit-restaurant').val(event.title);
+            $('#ModalEdit #id_start_date').val(moment(event.start).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalEdit #id_end_date').val(moment(event.end).format('YYYY-MM-DD HH:mm:ss'));
+            $('#ModalEdit').modal('show');
+            //window.location.href="/admin/deals/edit/"+event.id+"/";
+
+        });
+    },
+    eventDrop: function(event) {
+        edit(event);
+    },
+    eventResize: function(event) {
+        edit(event);
+    },
+    eventMouseover: function(event) {
+        start = event.start.format('DD MMM, YYYY HH:mm:ss');
+        end = event.end.format('DD MMM, YYYY HH:mm:ss');
+        var tooltip = '<div class="tooltipevent" style="border:none;border-radius:3px;' +
+        'background:transparent;position:absolute;z-index:3000;display:block;opacity: 0.85;">' +
+        '<ul class="list-group"><li class="list-group-item">Restaurant: ' + event.title + '</li>' +
+        '<li class="list-group-item">Hood: ' + event.description + '</li>' +
+        '<li class="list-group-item">Start Date: ' + start + '</li>' +
+        '<li class="list-group-item">End Date: ' + end + '</li>' +
+        '</div>';
+        var $tooltip = $(tooltip).appendTo('body');
+
+        $(this).mouseover(function(e) {
+            $(this).css('z-index', 10000);
+            $tooltip.fadeIn('500');
+            $tooltip.fadeTo('10', 1.9);
+        }).mousemove(function(e) {
+            $tooltip.css('top', e.pageY + 10);
+            $tooltip.css('left', e.pageX + 20);
+        });
+    },
+
+    eventMouseout: function() {
+        $(this).css('z-index', 8);
+        $('.tooltipevent').remove();
+    }
+});
+
+// To edit
+var edit = function(){
+    start = event.start.format('YYYY-MM-DD HH:mm:ss');
+    sdate = start.split(" ")[0];
+    stime = start.split(" ")[1];
+
+    if(event.end){
+        end = event.end.format('YYYY-MM-DD HH:mm:ss');
+        edate = end.split(" ")[0];
+        etime = end.split(" ")[1];
+
+    }else{
+        edate = sdate;
+        etime = stime;
+    }
+
+    id =  event.id;
+    title = event.menu_item;
+    price_in_kes = event.price_in_kes;
+    description = event.description;
+
+    $.post( '#', { csrfmiddlewaretoken: '{{ csrf_token }}' })
+    .done(function() {
+      alert("Saved");
+    })
+    .fail(function() {
+      alert("Error! Data not saved");
+    })
+    .always(function() {
+      console.log( "finished" );
+    });
+};
+// To delete
+var delete_event = function(event){
+    start = event.start.format('YYYY-MM-DD HH:mm:ss');
+    sdate = start.split(" ")[0];
+    stime = start.split(" ")[1];
+
+    id =  event.id;
+    title = event.menu_item;
+    price_in_kes = event.price_in_kes;
+    description = event.description;
+
+    if(event.end){
+        end = event.end.format('YYYY-MM-DD HH:mm:ss');
+        edate = end.split(" ")[0];
+        etime = end.split(" ")[1];
+
+    }else{
+        edate = sdate;
+        etime = stime;
+    }
+    $.post('#', {
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+        id: id
+        },
+        function(){
+            console.log("Deleted");
+    });
+};
