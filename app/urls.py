@@ -6,4 +6,5 @@ app_name = "app"
 urlpatterns = [
     url(r'^$', views.calendar_schedule, name='calendar-schedule'),
     url(r'^$', views.calendar_data, name='calendar-data'),
+    url(r'^events/$', views.events, name='calendar-events'),
 ]
