@@ -272,6 +272,7 @@ $('#calendar').fullCalendar({
                         events.push({
                             id: r.id,
                             title: r.title,
+                            description: r.description,
                             start: r.start,
                             end: r.end,
                             color: (moment(r.end).format('YYYY-MM-DD HH:mm:ss') < moment(today).format('YYYY-MM-DD HH:mm:ss')) ? '#E6E6E6': (moment(r.end).format('YYYY-MM-DD HH:mm:ss') > moment(today).format('YYYY-MM-DD HH:mm:ss')) ? 'green' : '#E6E6E6'
@@ -314,7 +315,7 @@ $('#calendar').fullCalendar({
         }
     },
     eventRender: function(event, element) {
-        element.append("<span class='closeon' style='border:1px solid #ffa900;border-radius:3px; background-color:#ffa900; margin-left:auto'><span class='fa fa-trash-o'></span></span>");
+        element.append("<span class='closeon' style='margin-left:auto'><span class='glyphicon glyphicon-trash' style='font-size:10px'></span></span>");
         element.find(".closeon").click(function() {
             // Confirm delete
             if (confirm("Are you sure you want to delete?") == true) {
@@ -348,8 +349,8 @@ $('#calendar').fullCalendar({
         var end = moment(event.end).format('DD MMM, YYYY HH:mm:ss');
         var tooltip = '<div class="tooltipevent" style="border:none;border-radius:3px;' +
         'background:transparent;position:absolute;z-index:3000;display:block;opacity: 0.85;">' +
-        '<ul class="list-group"><li class="list-group-item">Restaurant: ' + event.title + '</li>' +
-        '<li class="list-group-item">Hood: ' + event.description + '</li>' +
+        '<ul class="list-group"><li class="list-group-item">Title: ' + event.title + '</li>' +
+        '<li class="list-group-item">Description: ' + event.description + '</li>' +
         '<li class="list-group-item">Start Date: ' + start + '</li>' +
         '<li class="list-group-item">End Date: ' + end + '</li>' +
         '</div>';
