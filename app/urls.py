@@ -10,4 +10,5 @@ urlpatterns = [
     url(r'^$', calendar_schedule, name='calendar-schedule'),
     url(r'^$', calendar_data, name='calendar-data'),
     url(r'^events/$', event, name='calendar-events'),
+    url(r'^event/(?P<pk>[0-9]+)/$', event_detail, name="calendar-events-detail"),
 ]
