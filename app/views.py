@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.template.response import TemplateResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 
 from app.models import Event
 from .serializers import EventSerializer
@@ -145,19 +145,12 @@ def calculate_date_time(request):
     return HttpResponse("")
 
 
-@api_view(['GET', 'POST'])
-def events(request, format=None):
+class EventViewSet(viewsets.ModelViewSet):
     """
-    List all client stations, or create a new client.
+    Events
     """
-    if request.method == 'GET':
-        events = Event.objects.all()
-        serializer = EventSerializer(events, many=True)
-        return Response(serializer.data)
+    serializer_class = EventSerializer
 
-    elif request.method == 'POST':
-        serializer = EventSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_queryset(self, *args, **kwargs):
+        queryset = Event.objects.all()
+        return queryset

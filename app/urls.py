@@ -1,10 +1,13 @@
-from django.conf.urls import include, url
-from . import views
+from django.conf.urls import url
+from .views import calendar_schedule, calendar_data, EventViewSet
 
 app_name = "app"
 
+event = EventViewSet.as_view({'get': 'list', 'post': 'create'})
+event_detail = EventViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'})
+
 urlpatterns = [
-    url(r'^$', views.calendar_schedule, name='calendar-schedule'),
-    url(r'^$', views.calendar_data, name='calendar-data'),
-    url(r'^events/$', views.events, name='calendar-events'),
+    url(r'^$', calendar_schedule, name='calendar-schedule'),
+    url(r'^$', calendar_data, name='calendar-data'),
+    url(r'^events/$', event, name='calendar-events'),
 ]
