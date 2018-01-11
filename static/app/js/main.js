@@ -344,8 +344,8 @@ $('#calendar').fullCalendar({
         edit(event);
     },
     eventMouseover: function(event) {
-        start = event.start.format('DD MMM, YYYY HH:mm:ss');
-        end = event.end.format('DD MMM, YYYY HH:mm:ss');
+        var start = moment(event.start).format('DD MMM, YYYY HH:mm:ss');
+        var end = moment(event.end).format('DD MMM, YYYY HH:mm:ss');
         var tooltip = '<div class="tooltipevent" style="border:none;border-radius:3px;' +
         'background:transparent;position:absolute;z-index:3000;display:block;opacity: 0.85;">' +
         '<ul class="list-group"><li class="list-group-item">Restaurant: ' + event.title + '</li>' +
@@ -373,7 +373,7 @@ $('#calendar').fullCalendar({
 
 // To edit
 var edit = function(){
-    start = event.start.format('YYYY-MM-DD HH:mm:ss');
+    start = moment(event.start).format('YYYY-MM-DD HH:mm:ss');
     sdate = start.split(" ")[0];
     stime = start.split(" ")[1];
 
