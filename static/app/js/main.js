@@ -257,7 +257,7 @@ $('#calendar').fullCalendar({
     events: function(start, end, timezone, callback) {
         $('.loader').show();
         $.ajax({
-            url: '{% url "api:internet-billing-list" %}',
+            url: '/events',
             dataType: 'json',
             data: {
                 start: start.format(),
@@ -271,10 +271,10 @@ $('#calendar').fullCalendar({
                     $.map( doc, function( r ) {
                         events.push({
                             id: r.id,
-                            title: r.name,
-                            start: r.start_date,
-                            end: r.end_date,
-                            color: (moment(r.end_date).format('YYYY-MM-DD HH:mm:ss') < moment(today).format('YYYY-MM-DD HH:mm:ss')) ? '#E6E6E6': (moment(r.end_date).format('YYYY-MM-DD HH:mm:ss') > moment(today).format('YYYY-MM-DD HH:mm:ss')) ? 'green' : '#E6E6E6'
+                            title: r.title,
+                            start: r.start,
+                            end: r.end,
+                            color: (moment(r.end).format('YYYY-MM-DD HH:mm:ss') < moment(today).format('YYYY-MM-DD HH:mm:ss')) ? '#E6E6E6': (moment(r.end).format('YYYY-MM-DD HH:mm:ss') > moment(today).format('YYYY-MM-DD HH:mm:ss')) ? 'green' : '#E6E6E6'
                         });
                     });
                 }
